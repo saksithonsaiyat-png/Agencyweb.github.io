@@ -2,562 +2,510 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>My Valentine</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUXE WEAR | The Aristocrat Collection</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Mali for cute handwriting look -->
-    <link href="https://fonts.googleapis.com/css2?family=Mali:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Confetti -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <!-- Framer Motion -->
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'luxe-black': '#0a0a0a',
+                        'luxe-dark': '#121212',
+                        'luxe-gray': '#2a2a2a',
+                        'luxe-gold': '#D4AF37',
+                        'luxe-gold-light': '#F3E5AB',
+                        'luxe-white': '#FAFAFA',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    backgroundImage: {
+                        'hero-pattern': "url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop')",
+                    }
+                }
+            }
+        }
+    </script>
 
     <style>
-        body {
-            font-family: 'Mali', cursive;
-            background: linear-gradient(180deg, #ffe4e6 0%, #fda4af 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        /* Glassmorphism Card */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 10px 40px rgba(244, 63, 94, 0.15);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #be123c 0%, #fb7185 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(190, 18, 60, 0.3);
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .btn-primary:active {
-            transform: scale(0.92);
-        }
-
-        /* --- ANIMATIONS --- */
-        .bg-hearts {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: -1;
-            pointer-events: none;
-        }
-        .bg-heart {
-            position: absolute;
-            bottom: -50px;
-            background-color: rgba(255, 255, 255, 0.4);
-            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
-            -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
-            mask-size: contain;
-            -webkit-mask-size: contain;
-            animation: floatUp linear infinite;
-        }
-        @keyframes floatUp {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.8; }
-            100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
-        }
-
-        .stagger-in > * {
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-        }
-        .stagger-in > *:nth-child(1) { animation-delay: 0.1s; }
-        .stagger-in > *:nth-child(2) { animation-delay: 0.2s; }
-        .stagger-in > *:nth-child(3) { animation-delay: 0.3s; }
-        .stagger-in > *:nth-child(4) { animation-delay: 0.4s; }
-        .stagger-in > *:nth-child(5) { animation-delay: 0.5s; }
-
-        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
-        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-        .heart-beat { animation: heartbeat 1.5s ease-in-out infinite; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
-        .shake { animation: shake 0.4s ease-in-out; }
-        @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .spin-record { animation: spin-slow 8s linear infinite; }
-        .paused { animation-play-state: paused; }
-
-        .page {
-            display: none; opacity: 0; transition: opacity 0.4s ease;
-            width: 100%; height: 100vh; position: absolute; top: 0; left: 0;
-            overflow-y: auto; padding: 20px; box-sizing: border-box;
-            scrollbar-width: none; -ms-overflow-style: none;
-        }
-        .page::-webkit-scrollbar { display: none; }
-        .page.active { display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 1; z-index: 10; }
-
-        .envelope-wrapper { perspective: 1000px; }
-        .envelope-wrapper.open .flap { transform: rotateX(180deg); z-index: 0; }
-        .envelope-wrapper.open .letter { transform: translateY(-60px); z-index: 20; transition-delay: 0.4s; }
-        .flap { transform-origin: top; transition: transform 0.6s ease-in-out, z-index 0.6s; z-index: 10; }
-        .letter { transition: transform 0.6s ease-in-out; z-index: 5; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #D4AF37; }
+        body { background-color: #0a0a0a; color: #FAFAFA; overflow-x: hidden; }
     </style>
 </head>
-<body class="text-gray-700 antialiased select-none">
+<body>
+    <div id="root"></div>
 
-    <div class="bg-hearts" id="bg-hearts"></div>
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+        const { motion, AnimatePresence } = window.Motion;
 
-    <!-- PAGE 1: HOME -->
-    <div id="page-home" class="page active">
-        <div class="glass-card p-8 w-full max-w-sm text-center flex flex-col items-center stagger-in">
-            <div class="mb-6 relative">
-                <div class="absolute inset-0 bg-rose-400 blur-2xl opacity-20 rounded-full animate-pulse"></div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" viewBox="0 0 24 24" fill="#be123c" stroke="#9f1239" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="drop-shadow-lg heart-beat relative z-10"><path d="M19 14c1.49-1.28 3.6-2.34 3.6-4.44C22.59 7.05 20.35 4.8 17.82 4.8c-1.68 0-3.3 1.05-4.32 2.76C12.48 5.85 10.86 4.8 9.18 4.8 6.65 4.8 4.41 7.05 4.41 9.56c0 2.1 2.11 3.16 3.6 4.44l3.75 3.32a2.25 2.25 0 0 0 3.48 0L19 14z"></path><path d="M12 5v14"></path><path d="m15 13 4 2"></path><path d="m9 13-4 2"></path></svg>
-            </div>
-            <h1 class="text-4xl font-bold text-rose-700 mb-2 drop-shadow-sm">My Valentine</h1>
-            <p class="text-rose-500 text-sm mb-8 tracking-widest">FOR THE ONE I LOVE</p>
-            <div class="bg-white/40 rounded-2xl p-6 mb-8 w-full border border-white/50 backdrop-blur-sm">
-                <p class="text-rose-800 font-medium text-base leading-loose">
-                    "ของขวัญวาเลนไทน์ปีนี้<br>คือการมีเธออยู่ข้างๆ<br>เหมือนทุกวัน" ❤️
-                </p>
-            </div>
-            <button onclick="navigateTo('page-passcode')" class="btn-primary w-full py-4 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all">ดูเรื่องราวของเรา</button>
-        </div>
-    </div>
+        // --- Icons ---
+        const Icons = {
+            ShoppingBag: (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>,
+            X: (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>,
+            Menu: (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>,
+            Star: (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" {...props}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+            ArrowRight: (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>,
+            Search: (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>,
+            Plus: (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M5 12h14"/><path d="M12 5v14"/></svg>,
+            Minus: (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M5 12h14"/></svg>,
+            MapPin: (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>,
+            Phone: (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        };
 
-    <!-- PAGE 2: PASSCODE -->
-    <div id="page-passcode" class="page">
-        <div class="glass-card p-6 w-full max-w-sm text-center flex flex-col items-center stagger-in">
-            <div class="mb-4"><div class="w-16 h-16 bg-gradient-to-br from-rose-400 to-rose-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg mb-2"><i data-lucide="lock" class="text-white w-8 h-8"></i></div></div>
-            <h2 class="text-xl font-bold text-rose-800 mb-1">กรอกรหัสผ่าน</h2>
-            <p class="text-xs text-rose-500 mb-6 bg-rose-50 px-3 py-1 rounded-full border border-rose-100">คำใบ้ : รหัสคือ 180868</p>
-            <div id="dots-container" class="flex gap-3 mb-8 justify-center">
-                <div class="w-10 h-12 border-2 border-rose-200 rounded-xl flex items-center justify-center text-xl font-bold text-rose-600 bg-white/80 transition-all duration-200" id="digit-0"></div>
-                <div class="w-10 h-12 border-2 border-rose-200 rounded-xl flex items-center justify-center text-xl font-bold text-rose-600 bg-white/80 transition-all duration-200" id="digit-1"></div>
-                <div class="w-10 h-12 border-2 border-rose-200 rounded-xl flex items-center justify-center text-xl font-bold text-rose-600 bg-white/80 transition-all duration-200" id="digit-2"></div>
-                <div class="w-10 h-12 border-2 border-rose-200 rounded-xl flex items-center justify-center text-xl font-bold text-rose-600 bg-white/80 transition-all duration-200" id="digit-3"></div>
-                <div class="w-10 h-12 border-2 border-rose-200 rounded-xl flex items-center justify-center text-xl font-bold text-rose-600 bg-white/80 transition-all duration-200" id="digit-4"></div>
-                <div class="w-10 h-12 border-2 border-rose-200 rounded-xl flex items-center justify-center text-xl font-bold text-rose-600 bg-white/80 transition-all duration-200" id="digit-5"></div>
-            </div>
-            <div class="grid grid-cols-3 gap-3 w-full max-w-[280px]">
-                <button onclick="enterDigit(1)" class="h-14 bg-white/60 rounded-xl text-xl font-bold text-rose-800 shadow-sm active:bg-rose-100 transition-colors">1</button>
-                <button onclick="enterDigit(2)" class="h-14 bg-white/60 rounded-xl text-xl font-bold text-rose-800 shadow-sm active:bg-rose-100 transition-colors">2</button>
-                <button onclick="enterDigit(3)" class="h-14 bg-white/60 rounded-xl text-xl font-bold text-rose-800 shadow-sm active:bg-rose-100 transition-colors">3</button>
-                <button onclick="enterDigit(4)" class="h-14 bg-white/60 rounded-xl text-xl font-bold text-rose-800 shadow-sm active:bg-rose-100 transition-colors">4</button>
-                <button onclick="enterDigit(5)" class="h-14 bg-white/60 rounded-xl text-xl font-bold text-rose-800 shadow-sm active:bg-rose-100 transition-colors">5</button>
-                <button onclick="enterDigit(6)" class="h-14 bg-white/60 rounded-xl text-xl font-bold text-rose-800 shadow-sm active:bg-rose-100 transition-colors">6</button>
-                <button onclick="enterDigit(7)" class="h-14 bg-white/60 rounded-xl text-xl font-bold text-rose-800 shadow-sm active:bg-rose-100 transition-colors">7</button>
-                <button onclick="enterDigit(8)" class="h-14 bg-white/60 rounded-xl text-xl font-bold text-rose-800 shadow-sm active:bg-rose-100 transition-colors">8</button>
-                <button onclick="enterDigit(9)" class="h-14 bg-white/60 rounded-xl text-xl font-bold text-rose-800 shadow-sm active:bg-rose-100 transition-colors">9</button>
-                <button onclick="deleteDigit()" class="h-14 bg-rose-100/50 rounded-xl text-sm font-bold text-rose-800 shadow-sm active:bg-rose-200 flex items-center justify-center transition-colors"><i data-lucide="delete" class="w-5 h-5"></i></button>
-                <button onclick="enterDigit(0)" class="h-14 bg-white/60 rounded-xl text-xl font-bold text-rose-800 shadow-sm active:bg-rose-100 transition-colors">0</button>
-                <button onclick="checkPasscode()" class="h-14 bg-rose-500 rounded-xl text-sm font-bold text-white shadow-md active:bg-rose-600 flex items-center justify-center transition-colors">ยืนยัน</button>
-            </div>
-            <p id="passcode-error" class="text-red-500 text-xs mt-4 h-4 opacity-0 transition-opacity">รหัสไม่ถูกต้อง ลองใหม่อีกครั้งนะ</p>
-        </div>
-    </div>
+        // --- Data ---
+        const PRODUCTS = [
+            { id: 1, name: "The Royal Silk Shirt", price: 4500, category: "Silk", image: "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?q=80&w=1925&auto=format&fit=crop", desc: "เสื้อเชิ้ตผ้าไหมแท้ 100% สัมผัสนุ่มลื่น ดุจดั่งชนชั้นสูง ทรง Slim Fit" },
+            { id: 2, name: "Midnight Velvet Blazer", price: 8900, category: "Blazer", image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=2071&auto=format&fit=crop", desc: "เบลเซอร์กำมะหยี่สีดำรัตติกาล เหมาะสำหรับงานกาล่าและการพบปะสำคัญ" },
+            { id: 3, name: "Linen Breeze White", price: 3200, category: "Linen", image: "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?q=80&w=2070&auto=format&fit=crop", desc: "ความสบายที่หรูหรา ผ้าลินินอิตาลี ระบายอากาศเยี่ยมยอด สีขาวบริสุทธิ์" },
+            { id: 4, name: "Gold Thread Tuxedo", price: 12500, category: "Suits", image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=1780&auto=format&fit=crop", desc: "ทักซิโด้ปักดิ้นทอง งานแฮนด์เมด ใส่ใจทุกรายละเอียด เพื่อค่ำคืนพิเศษ" },
+            { id: 5, name: "Oxford Classic Blue", price: 2800, category: "Cotton", image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=1888&auto=format&fit=crop", desc: "คลาสสิกไม่มีวันตาย ผ้า Oxford เกรดพรีเมียม ตัดเย็บปราณีต" },
+            { id: 6, name: "Signature Black Polo", price: 2500, category: "Casual", image: "https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=1887&auto=format&fit=crop", desc: "โปโลซิกเนเจอร์ โลโก้ทอง 18K สไตล์ Casual ที่ยังคงความเนี้ยบ" },
+        ];
+        const CATEGORIES = ["All", "Silk", "Blazer", "Linen", "Suits", "Cotton", "Casual"];
 
-    <!-- PAGE 3: SCRATCH CARD -->
-    <div id="page-secret" class="page">
-        <div class="glass-card p-6 w-full max-w-sm text-center flex flex-col items-center stagger-in">
-            <h2 class="text-2xl font-bold text-rose-800 mb-2">ความลับของเรา</h2>
-            <p class="text-rose-500 text-sm mb-6 bg-white/50 px-4 py-1 rounded-full">ขูดการ์ดเพื่อดูรูปภาพ</p>
-            <div class="relative w-64 h-72 rounded-2xl overflow-hidden shadow-xl bg-white mb-6 ring-4 ring-white/50">
-                <div class="absolute inset-0 flex flex-col items-center justify-center bg-rose-50">
-                    <!-- 🟢 แก้ไขรูปที่ซ่อนอยู่ (Scratch Card) ตรงนี้ -->
-                    <img src="https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover opacity-90" alt="Couple">
-                    <div class="absolute inset-0 flex flex-col items-center justify-center bg-black/20 p-4">
-                        <div class="bg-white/90 backdrop-blur-md p-4 rounded-xl shadow-lg transform rotate-[-2deg]">
-                            <h3 class="text-rose-600 font-bold text-lg">Happy Valentine's Day</h3>
-                            <p class="text-xs text-rose-400 mt-1">แค่มีเธออยู่ทุกวันก็พิเศษแล้ว</p>
+        // --- Shared Components ---
+        const Navbar = ({ cartCount, onOpenCart, activePage, onNavigate }) => {
+            const [scrolled, setScrolled] = useState(false);
+            const [menuOpen, setMenuOpen] = useState(false);
+
+            useEffect(() => {
+                const handleScroll = () => setScrolled(window.scrollY > 50);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            const NavLink = ({ page, label }) => (
+                <button 
+                    onClick={() => { onNavigate(page); setMenuOpen(false); }}
+                    className={`uppercase tracking-widest text-sm transition-all duration-300 relative group ${activePage === page ? 'text-luxe-gold' : 'text-gray-300 hover:text-white'}`}
+                >
+                    {label}
+                    <span className={`absolute -bottom-2 left-0 h-[1px] bg-luxe-gold transition-all duration-300 ${activePage === page ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
+                </button>
+            );
+
+            return (
+                <motion.nav 
+                    className={`fixed w-full z-50 transition-all duration-300 ${scrolled || menuOpen ? 'bg-luxe-black/95 backdrop-blur-md py-4 shadow-lg border-b border-white/10' : 'bg-transparent py-6'}`}
+                >
+                    <div className="container mx-auto px-6 flex justify-between items-center">
+                        <div className="flex items-center gap-4">
+                            <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden text-white"><Icons.Menu /></button>
+                            <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('home'); }} className="font-serif text-2xl font-bold tracking-widest text-white">
+                                LUXE<span className="text-luxe-gold">.</span>WEAR
+                            </a>
+                        </div>
+
+                        {/* Desktop Menu */}
+                        <div className="hidden md:flex gap-8 items-center">
+                            <NavLink page="collections" label="Collections" />
+                            <NavLink page="atelier" label="Atelier" />
+                            <NavLink page="journal" label="Journal" />
+                            <NavLink page="contact" label="Contact" />
+                        </div>
+
+                        <div className="flex items-center gap-6">
+                            <div className="relative cursor-pointer" onClick={onOpenCart}>
+                                <Icons.ShoppingBag className="w-5 h-5 text-white hover:text-luxe-gold transition-colors" />
+                                {cartCount > 0 && (
+                                    <motion.span 
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        className="absolute -top-2 -right-2 bg-luxe-gold text-luxe-black text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full"
+                                    >
+                                        {cartCount}
+                                    </motion.span>
+                                )}
+                            </div>
                         </div>
                     </div>
+
+                    {/* Mobile Menu */}
+                    <AnimatePresence>
+                        {menuOpen && (
+                            <motion.div 
+                                initial={{ height: 0, opacity: 0 }} 
+                                animate={{ height: 'auto', opacity: 1 }} 
+                                exit={{ height: 0, opacity: 0 }}
+                                className="md:hidden overflow-hidden bg-luxe-black border-t border-white/10"
+                            >
+                                <div className="flex flex-col p-6 space-y-4 items-center">
+                                    <NavLink page="collections" label="Collections" />
+                                    <NavLink page="atelier" label="Atelier" />
+                                    <NavLink page="journal" label="Journal" />
+                                    <NavLink page="contact" label="Contact" />
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </motion.nav>
+            );
+        };
+
+        const ProductCard = ({ product, onAddToCart, onQuickView }) => (
+            <motion.div 
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                whileHover={{ y: -5 }}
+                className="group relative"
+            >
+                <div className="relative aspect-[3/4] overflow-hidden bg-luxe-gray cursor-pointer" onClick={() => onQuickView(product)}>
+                    <motion.img 
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ duration: 0.5 }}
+                        src={product.image} 
+                        alt={product.name} 
+                        className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
+                        <button 
+                            onClick={(e) => { e.stopPropagation(); onAddToCart(product); }}
+                            className="bg-white text-black px-6 py-3 uppercase text-xs tracking-wider font-bold hover:bg-luxe-gold hover:text-black transition-colors"
+                        >
+                            Add to Cart
+                        </button>
+                    </div>
                 </div>
-                <canvas id="scratch-canvas" class="absolute inset-0 w-full h-full cursor-pointer z-10 touch-none"></canvas>
-            </div>
-            <p class="text-rose-400 text-xs mb-6 animate-pulse">ใช้นิ้วถูเบาๆ บนรูปภาพ</p>
-            <button onclick="navigateTo('page-menu')" class="btn-primary px-10 py-3 rounded-full font-bold shadow-lg text-sm">ไปหน้าเมนู</button>
-        </div>
-    </div>
-
-    <!-- PAGE 4: MAIN MENU -->
-    <div id="page-menu" class="page">
-        <div class="glass-card p-6 w-full max-w-sm text-center stagger-in">
-            <h2 class="text-2xl font-bold text-rose-800 mb-8">เลือกเมนู</h2>
-            <div class="grid grid-cols-2 gap-4 mb-8">
-                <div onclick="navigateTo('page-memories')" class="bg-white/70 hover:bg-white p-4 rounded-2xl shadow-sm hover:shadow-md active:scale-95 transition-all cursor-pointer flex flex-col items-center justify-center h-32 group">
-                    <div class="w-12 h-12 bg-rose-100 group-hover:bg-rose-200 rounded-2xl flex items-center justify-center mb-3 transition-colors"><i data-lucide="image" class="text-rose-500 w-6 h-6"></i></div>
-                    <h3 class="font-bold text-rose-700 text-sm">ความทรงจำ</h3>
-                    <p class="text-[10px] text-gray-400">เรื่องราวเล็กๆ</p>
+                <div className="mt-4 text-center">
+                    <p className="text-gray-400 text-xs uppercase tracking-widest mb-1">{product.category}</p>
+                    <h3 className="text-white font-serif text-lg tracking-wide cursor-pointer hover:text-luxe-gold transition-colors" onClick={() => onQuickView(product)}>{product.name}</h3>
+                    <p className="text-luxe-gold mt-2 font-medium">฿{product.price.toLocaleString()}</p>
                 </div>
-                <div onclick="navigateTo('page-letter')" class="bg-white/70 hover:bg-white p-4 rounded-2xl shadow-sm hover:shadow-md active:scale-95 transition-all cursor-pointer flex flex-col items-center justify-center h-32 group">
-                    <div class="w-12 h-12 bg-rose-100 group-hover:bg-rose-200 rounded-2xl flex items-center justify-center mb-3 transition-colors"><i data-lucide="mail-heart" class="text-rose-500 w-6 h-6"></i></div>
-                    <h3 class="font-bold text-rose-700 text-sm">จดหมาย</h3>
-                    <p class="text-[10px] text-gray-400">ข้อความจากใจ</p>
+            </motion.div>
+        );
+
+        // --- Pages ---
+
+        const HomePage = ({ onNavigate }) => (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="pt-0">
+                {/* Hero */}
+                <div className="relative h-screen w-full overflow-hidden flex items-center justify-center">
+                    <motion.div 
+                        initial={{ scale: 1.1 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 10, repeat: Infinity, repeatType: "mirror" }}
+                        className="absolute inset-0 bg-hero-pattern bg-cover bg-center"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-luxe-black via-luxe-black/50 to-transparent" />
+                    <div className="relative z-10 text-center px-4">
+                        <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="text-luxe-gold tracking-[0.3em] text-sm uppercase mb-4">The Aristocrat Collection</motion.p>
+                        <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.8 }} className="font-serif text-5xl md:text-8xl text-white font-medium mb-8 leading-tight">ELEGANCE <br /> <span className="italic font-light text-gray-300">REDEFINED</span></motion.h1>
+                        <motion.button 
+                            onClick={() => onNavigate('collections')}
+                            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}
+                            className="px-8 py-3 border border-white/30 text-white uppercase tracking-widest text-xs hover:bg-luxe-gold hover:border-luxe-gold hover:text-black transition-all duration-300"
+                        >
+                            Explore Collection
+                        </motion.button>
+                    </div>
                 </div>
-                <div onclick="resetQuiz(); navigateTo('page-quiz')" class="bg-white/70 hover:bg-white p-4 rounded-2xl shadow-sm hover:shadow-md active:scale-95 transition-all cursor-pointer flex flex-col items-center justify-center h-32 group">
-                    <div class="w-12 h-12 bg-rose-100 group-hover:bg-rose-200 rounded-2xl flex items-center justify-center mb-3 transition-colors"><i data-lucide="help-circle" class="text-rose-500 w-6 h-6"></i></div>
-                    <h3 class="font-bold text-rose-700 text-sm">แบบทดสอบ</h3>
-                    <p class="text-[10px] text-gray-400">รู้จักเราดีแค่ไหน</p>
+            </motion.div>
+        );
+
+        const CollectionsPage = ({ addToCart, setQuickViewProduct }) => {
+            const [selectedCategory, setSelectedCategory] = useState("All");
+            const filteredProducts = useMemo(() => selectedCategory === "All" ? PRODUCTS : PRODUCTS.filter(p => p.category === selectedCategory), [selectedCategory]);
+
+            return (
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="pt-32 pb-20 container mx-auto px-6 min-h-screen">
+                    <div className="text-center mb-12">
+                        <h2 className="text-4xl md:text-5xl font-serif text-white">Our Collections</h2>
+                        <div className="w-24 h-[1px] bg-luxe-gold mx-auto mt-6"></div>
+                    </div>
+                    
+                    {/* Filters */}
+                    <div className="flex flex-wrap justify-center gap-4 md:gap-8 mb-16">
+                        {CATEGORIES.map(cat => (
+                            <button key={cat} onClick={() => setSelectedCategory(cat)} className={`text-xs uppercase tracking-widest pb-2 border-b-2 transition-all duration-300 ${selectedCategory === cat ? 'text-luxe-gold border-luxe-gold' : 'text-gray-500 border-transparent hover:text-white'}`}>{cat}</button>
+                        ))}
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+                        <AnimatePresence>
+                            {filteredProducts.map(product => (
+                                <ProductCard key={product.id} product={product} onAddToCart={addToCart} onQuickView={setQuickViewProduct} />
+                            ))}
+                        </AnimatePresence>
+                    </div>
+                </motion.div>
+            );
+        };
+
+        const AtelierPage = () => (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="pt-32 pb-20 container mx-auto px-6 min-h-screen">
+                <div className="grid md:grid-cols-2 gap-16 items-center">
+                    <div className="space-y-8">
+                        <span className="text-luxe-gold uppercase tracking-[0.2em] text-sm">Craftsmanship</span>
+                        <h2 className="text-5xl font-serif text-white leading-tight">The Art of <br/> <span className="italic text-gray-400">Tailoring</span></h2>
+                        <p className="text-gray-300 leading-loose font-light">
+                            ณ ห้องเสื้อของ Luxe Wear ช่างฝีมือชั้นครูของเราใช้เวลาหลายร้อยชั่วโมงในการรังสรรค์สูทแต่ละชุด ด้วยเทคนิคดั้งเดิมที่สืบทอดมารุ่นต่อรุ่น ผสมผสานกับนวัตกรรมผ้าสมัยใหม่ เราเชื่อว่าความหรูหราที่แท้จริงไม่ได้อยู่ที่ราคา แต่อยู่ที่ความใส่ใจในทุกฝีเข็ม
+                        </p>
+                        <div className="grid grid-cols-2 gap-8 pt-8">
+                            <div>
+                                <h4 className="text-3xl font-serif text-luxe-gold mb-2">50+</h4>
+                                <p className="text-gray-500 text-xs uppercase tracking-widest">Master Tailors</p>
+                            </div>
+                            <div>
+                                <h4 className="text-3xl font-serif text-luxe-gold mb-2">100%</h4>
+                                <p className="text-gray-500 text-xs uppercase tracking-widest">Imported Silk</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="relative">
+                        <div className="absolute -top-4 -left-4 w-full h-full border border-luxe-gold/30"></div>
+                        <img src="https://images.unsplash.com/photo-1594938328870-9623159c8c99?q=80&w=1974&auto=format&fit=crop" className="relative z-10 w-full grayscale hover:grayscale-0 transition-all duration-700" alt="Tailoring" />
+                    </div>
                 </div>
-                <div onclick="navigateTo('page-timer')" class="bg-white/70 hover:bg-white p-4 rounded-2xl shadow-sm hover:shadow-md active:scale-95 transition-all cursor-pointer flex flex-col items-center justify-center h-32 group">
-                    <div class="w-12 h-12 bg-rose-100 group-hover:bg-rose-200 rounded-2xl flex items-center justify-center mb-3 transition-colors"><i data-lucide="clock" class="text-rose-500 w-6 h-6"></i></div>
-                    <h3 class="font-bold text-rose-700 text-sm">เวลาของเรา</h3>
-                    <p class="text-[10px] text-gray-400">คบกันมานานเท่าไหร่</p>
+            </motion.div>
+        );
+
+        const JournalPage = () => {
+            const articles = [
+                { id: 1, title: "Summer Elegance: Linen Guide", date: "FEB 09, 2024", img: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=1888&auto=format&fit=crop" },
+                { id: 2, title: "The History of the Tuxedo", date: "JAN 15, 2024", img: "https://images.unsplash.com/photo-1550246140-5119980d0a16?q=80&w=1935&auto=format&fit=crop" },
+                { id: 3, title: "Caring for Italian Silk", date: "DEC 22, 2023", img: "https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=1887&auto=format&fit=crop" },
+            ];
+            return (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="pt-32 pb-20 container mx-auto px-6 min-h-screen">
+                    <div className="text-center mb-16">
+                        <span className="text-luxe-gold uppercase tracking-[0.2em] text-xs">Editorial</span>
+                        <h2 className="text-4xl md:text-5xl font-serif text-white mt-4">The Journal</h2>
+                    </div>
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {articles.map(article => (
+                            <div key={article.id} className="group cursor-pointer">
+                                <div className="overflow-hidden mb-6 aspect-[4/3]">
+                                    <img src={article.img} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                </div>
+                                <span className="text-luxe-gold text-xs tracking-widest">{article.date}</span>
+                                <h3 className="text-white font-serif text-xl mt-2 group-hover:text-luxe-gold transition-colors">{article.title}</h3>
+                                <div className="flex items-center gap-2 mt-4 text-gray-500 text-xs uppercase tracking-wider group-hover:text-white transition-colors">
+                                    Read Article <Icons.ArrowRight className="w-4 h-4" />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </motion.div>
+            );
+        };
+
+        const ContactPage = () => (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="pt-32 pb-20 container mx-auto px-6 min-h-screen">
+                <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 bg-luxe-gray p-8 md:p-12 border border-white/5">
+                    <div>
+                        <h2 className="text-3xl font-serif text-white mb-6">Visit Our Flagship</h2>
+                        <div className="space-y-6 text-gray-400 font-light">
+                            <div className="flex gap-4">
+                                <Icons.MapPin className="text-luxe-gold w-6 h-6 shrink-0" />
+                                <p>Siam Paragon, Main Floor<br/>991 Rama I Rd, Pathum Wan,<br/>Bangkok 10330</p>
+                            </div>
+                            <div className="flex gap-4">
+                                <Icons.Phone className="text-luxe-gold w-6 h-6 shrink-0" />
+                                <p>+66 2 123 4567<br/>concierge@luxewear.com</p>
+                            </div>
+                        </div>
+                        <div className="mt-8 pt-8 border-t border-white/10">
+                            <h4 className="text-white mb-4 font-serif">Opening Hours</h4>
+                            <p className="text-gray-400 text-sm">Mon - Sun: 10:00 - 21:00</p>
+                        </div>
+                    </div>
+                    <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+                        <h3 className="text-xl text-white font-serif">Send a Message</h3>
+                        <input type="text" placeholder="Name" className="w-full bg-luxe-black border border-white/10 p-4 text-white text-sm focus:border-luxe-gold outline-none transition-colors" />
+                        <input type="email" placeholder="Email" className="w-full bg-luxe-black border border-white/10 p-4 text-white text-sm focus:border-luxe-gold outline-none transition-colors" />
+                        <textarea rows="4" placeholder="Message" className="w-full bg-luxe-black border border-white/10 p-4 text-white text-sm focus:border-luxe-gold outline-none transition-colors"></textarea>
+                        <button className="w-full bg-luxe-gold text-black py-4 uppercase text-xs font-bold tracking-widest hover:bg-white transition-colors">Send Inquiry</button>
+                    </form>
                 </div>
-                <div onclick="navigateTo('page-polaroid')" class="bg-white/70 hover:bg-white p-4 rounded-2xl shadow-sm hover:shadow-md active:scale-95 transition-all cursor-pointer flex flex-col items-center justify-center h-32 group">
-                    <div class="w-12 h-12 bg-rose-100 group-hover:bg-rose-200 rounded-2xl flex items-center justify-center mb-3 transition-colors"><i data-lucide="camera" class="text-rose-500 w-6 h-6"></i></div>
-                    <h3 class="font-bold text-rose-700 text-sm">ถ่ายโพลารอยด์</h3>
-                    <p class="text-[10px] text-gray-400">เก็บภาพเรา</p>
-                </div>
-                 <div onclick="navigateTo('page-music')" class="bg-white/70 hover:bg-white p-4 rounded-2xl shadow-sm hover:shadow-md active:scale-95 transition-all cursor-pointer flex flex-col items-center justify-center h-32 group">
-                    <div class="w-12 h-12 bg-rose-100 group-hover:bg-rose-200 rounded-2xl flex items-center justify-center mb-3 transition-colors"><i data-lucide="music" class="text-rose-500 w-6 h-6"></i></div>
-                    <h3 class="font-bold text-rose-700 text-sm">เพลงของเรา</h3>
-                    <p class="text-[10px] text-gray-400">เปิดเพลงนี้</p>
-                </div>
-            </div>
-            <button onclick="navigateTo('page-home')" class="px-6 py-2 text-rose-500 text-sm hover:text-rose-700 transition-colors"><i data-lucide="arrow-left" class="inline w-4 h-4 mr-1"></i> กลับหน้าแรก</button>
-        </div>
-    </div>
+            </motion.div>
+        );
 
-    <!-- FEATURE: MEMORIES -->
-    <div id="page-memories" class="page">
-        <div class="glass-card p-6 w-full max-w-sm flex flex-col items-center stagger-in">
-            <h2 class="text-xl font-bold text-rose-800 mb-4 flex items-center gap-2"><i data-lucide="image" class="w-5 h-5"></i> ความทรงจำ</h2>
-            <div class="relative w-full aspect-square bg-gray-100 rounded-2xl overflow-hidden mb-6 shadow-md group">
-                <img id="memory-img" src="" class="w-full h-full object-cover transition-all duration-700 transform hover:scale-105">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60"></div>
-                <button onclick="prevMemory()" class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md p-2 rounded-full hover:bg-white/40 text-white transition-all"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
-                <button onclick="nextMemory()" class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md p-2 rounded-full hover:bg-white/40 text-white transition-all"><i data-lucide="chevron-right" class="w-6 h-6"></i></button>
-            </div>
-            <div class="text-center w-full mb-6">
-                <h3 id="memory-title" class="font-bold text-rose-700 text-xl mb-2">วันแรก...</h3>
-                <p id="memory-desc" class="text-gray-500 text-sm font-light">รายละเอียดความทรงจำ...</p>
-            </div>
-            <div class="flex gap-2 mb-6" id="memory-dots">
-                <!-- Dots injected by JS -->
-            </div>
-            <button onclick="navigateTo('page-menu')" class="bg-rose-100 text-rose-600 px-6 py-2 rounded-full text-sm font-bold hover:bg-rose-200 transition-colors">กลับไปหน้าเมนู</button>
-        </div>
-    </div>
+        // --- Layout & App ---
 
-    <!-- FEATURE: LETTER -->
-    <div id="page-letter" class="page">
-        <div class="glass-card p-6 w-full max-w-sm flex flex-col items-center stagger-in">
-            <h2 class="text-xl font-bold text-rose-800 mb-2">จดหมายถึงเธอ</h2>
-            <p class="text-xs text-rose-400 mb-12 bg-white/50 px-3 py-1 rounded-full">กดที่ซองเพื่อเปิดอ่าน</p>
-            <div class="envelope-wrapper relative w-72 h-48 cursor-pointer mb-24" onclick="toggleLetter(this)">
-                <div class="absolute bottom-0 w-full h-full bg-rose-500 rounded-b-xl shadow-2xl z-10"></div>
-                <div class="absolute bottom-0 w-full h-full bg-rose-600 rounded-b-xl clip-path-triangle z-20" style="clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 100%, 0 100%); opacity: 0.3"></div>
-                <div class="flap absolute top-0 w-full h-1/2 bg-rose-700 rounded-t-xl origin-top" style="clip-path: polygon(0 0, 100% 0, 50% 100%); height: 100%;"></div>
-                <div class="letter absolute bottom-2 left-2 right-2 top-4 bg-white p-6 rounded-lg shadow-sm flex flex-col items-center justify-center text-center border border-gray-100">
-                    <i data-lucide="heart" class="text-rose-500 w-5 h-5 mb-3 fill-current animate-pulse"></i>
-                    <p class="text-xs text-gray-600 leading-relaxed font-medium">"เราอาจจะไม่ใช่คนที่พูดคำหวานเก่ง ไม่ได้เก่งเรื่องแสดงออกเท่าไหร่ แต่ทุกครั้งที่มีเธออยู่ข้างๆ โลกมันดูอ่อนโยนขึ้นเสมอ... ขอบคุณที่รักกันนะ"</p>
-                    <p class="text-[10px] text-rose-400 mt-4 w-full text-right font-bold">- รักเธอที่สุด -</p>
-                </div>
-            </div>
-            <button onclick="navigateTo('page-menu')" class="bg-rose-100 text-rose-600 px-6 py-2 rounded-full text-sm font-bold hover:bg-rose-200 transition-colors mt-6">กลับไปหน้าเมนู</button>
-        </div>
-    </div>
+        const App = () => {
+            const [currentPage, setCurrentPage] = useState("home");
+            const [cart, setCart] = useState([]);
+            const [isCartOpen, setIsCartOpen] = useState(false);
+            const [quickViewProduct, setQuickViewProduct] = useState(null);
 
-    <!-- FEATURE: QUIZ -->
-    <div id="page-quiz" class="page">
-        <div class="glass-card p-6 w-full max-w-sm flex flex-col items-center stagger-in">
-            <div class="w-full flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-rose-800">รู้จักเราดีแค่ไหน</h2>
-                <span class="text-xs bg-rose-100 text-rose-600 px-2 py-1 rounded-md font-bold">ข้อที่ <span id="quiz-current">1</span>/5</span>
-            </div>
-            <div class="w-full bg-white rounded-2xl p-8 mb-6 text-center shadow-sm relative min-h-[120px] flex items-center justify-center">
-                <div class="absolute -top-3 -left-3 bg-rose-500 text-white p-2 rounded-full shadow-md"><i data-lucide="help-circle" class="w-4 h-4"></i></div>
-                <p id="quiz-question" class="text-gray-700 font-bold text-lg leading-relaxed">คำถามอยู่ที่นี่?</p>
-            </div>
-            <div id="quiz-options" class="w-full flex flex-col gap-3 mb-4"></div>
-             <div id="quiz-result" class="hidden absolute inset-0 bg-white/95 backdrop-blur-xl z-20 flex-col items-center justify-center rounded-24 transition-opacity duration-300">
-                <div class="text-6xl mb-4 animate-bounce">🏆</div>
-                <h3 class="text-2xl font-bold text-rose-600 mb-2">คะแนนของเธอ</h3>
-                <div class="text-5xl font-bold text-gray-800 mb-2"><span id="quiz-score-display">0</span><span class="text-2xl text-gray-400">/5</span></div>
-                <p id="quiz-msg" class="text-rose-400 text-sm mb-8">เก่งมาก!</p>
-                <button onclick="navigateTo('page-menu')" class="btn-primary px-8 py-3 rounded-full text-sm font-bold shadow-lg">กลับไปหน้าเมนู</button>
-             </div>
-        </div>
-    </div>
+            const addToCart = (product) => {
+                setCart(prev => {
+                    const existing = prev.find(item => item.id === product.id);
+                    if (existing) return prev.map(item => item.id === product.id ? { ...item, qty: item.qty + 1 } : item);
+                    return [...prev, { ...product, qty: 1 }];
+                });
+                setIsCartOpen(true);
+            };
 
-    <!-- FEATURE: TIMER -->
-    <div id="page-timer" class="page">
-        <div class="glass-card p-6 w-full max-w-sm flex flex-col items-center stagger-in text-center">
-            <div class="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mb-4 animate-[pulse_3s_infinite]"><i data-lucide="heart" class="text-rose-500 w-8 h-8 fill-rose-500 heart-beat"></i></div>
-            <h2 class="text-xl font-bold text-rose-800 mb-1">ระยะเวลาของเรา</h2>
-            <p class="text-xs text-rose-400 mb-8">นับตั้งแต่วันแรกที่คบกัน</p>
-            <div class="bg-gradient-to-r from-rose-500 to-pink-500 text-white w-full rounded-2xl p-6 mb-6 shadow-lg relative overflow-hidden">
-                <div class="absolute top-0 right-0 p-4 opacity-10"><i data-lucide="calendar" class="w-16 h-16"></i></div>
-                <div class="relative z-10"><span class="text-sm opacity-90 block mb-1">ผ่านไปแล้ว...</span><div class="flex items-baseline justify-center gap-2"><span id="timer-days" class="text-6xl font-bold tracking-tighter">0</span><span class="text-xl">วัน</span></div></div>
-            </div>
-            <div class="grid grid-cols-3 gap-3 w-full mb-8">
-                <div class="bg-white/60 p-3 rounded-xl flex flex-col items-center shadow-sm"><span id="timer-hours" class="text-2xl font-bold text-rose-600">00</span><span class="text-[10px] text-gray-500 uppercase">ชั่วโมง</span></div>
-                <div class="bg-white/60 p-3 rounded-xl flex flex-col items-center shadow-sm"><span id="timer-minutes" class="text-2xl font-bold text-rose-600">00</span><span class="text-[10px] text-gray-500 uppercase">นาที</span></div>
-                <div class="bg-white/60 p-3 rounded-xl flex flex-col items-center shadow-sm"><span id="timer-seconds" class="text-2xl font-bold text-rose-600">00</span><span class="text-[10px] text-gray-500 uppercase">วินาที</span></div>
-            </div>
-            <p class="text-xs text-gray-400 italic mb-6">"ทุกวินาทีมีความหมาย เมื่อมีเธอ"</p>
-            <button onclick="navigateTo('page-menu')" class="bg-white text-rose-500 border border-rose-200 w-full py-3 rounded-full text-sm font-bold hover:bg-rose-50 transition-colors">กลับไปหน้าเมนู</button>
-        </div>
-    </div>
-
-    <!-- FEATURE: POLAROID -->
-    <div id="page-polaroid" class="page">
-        <div class="glass-card p-6 w-full max-w-sm flex flex-col items-center stagger-in">
-            <h2 class="text-xl font-bold text-rose-800 mb-1">ถ่ายรูปโพลารอยด์</h2>
-            <p class="text-xs text-rose-500 mb-6">เก็บช่วงเวลาน่ารักของเราไว้</p>
-            <div id="camera-view" class="w-64 h-80 bg-gray-800 rounded-lg relative flex items-center justify-center overflow-hidden mb-8 border-[6px] border-white shadow-xl ring-1 ring-gray-200">
-                <div class="text-center group"><i data-lucide="camera" class="w-12 h-12 text-gray-500 mx-auto mb-2 group-hover:text-white transition-colors"></i><p class="text-gray-500 text-xs">Lens View</p></div>
-                <div id="shutter-flash" class="absolute inset-0 bg-white opacity-0 pointer-events-none transition-opacity duration-150 z-20"></div>
-                <img id="polaroid-result" src="https://images.unsplash.com/photo-1529634597503-139d3726d515?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover hidden z-10 transition-transform duration-[5s] hover:scale-110">
-                 <div class="absolute bottom-4 left-0 w-full text-center z-10 pointer-events-none"><p class="text-white/80 text-[10px] tracking-widest font-light drop-shadow-md hidden" id="polaroid-date">VALENTINE 2025</p></div>
-            </div>
-            <button id="btn-snap" onclick="takePhoto()" class="btn-primary w-16 h-16 rounded-full font-bold shadow-lg flex items-center justify-center border-4 border-rose-200 active:border-rose-400 transition-all mb-4"><i data-lucide="aperture" class="w-8 h-8"></i></button>
-            <p class="text-xs text-gray-400">กดปุ่มเพื่อถ่ายภาพ</p>
-            <button onclick="resetPolaroid(); navigateTo('page-menu')" class="mt-6 text-sm text-rose-500 font-bold hover:underline">กลับไปหน้าเมนู</button>
-        </div>
-    </div>
-
-     <!-- FEATURE: MUSIC -->
-     <div id="page-music" class="page">
-        <div class="glass-card p-6 w-full max-w-sm flex flex-col items-center stagger-in">
-            <h2 class="text-xl font-bold text-rose-800 mb-1">เพลงของเรา</h2>
-            <p class="text-xs text-rose-500 mb-8">เพลงนี้อยากให้เธอฟัง</p>
-            <div class="relative w-64 h-64 rounded-full bg-zinc-900 border-4 border-gray-800 shadow-2xl flex items-center justify-center mb-8 spin-record paused ring-4 ring-rose-100" id="vinyl">
-                <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-white/10 to-transparent pointer-events-none"></div>
-                <div class="absolute inset-2 rounded-full border border-gray-800 opacity-50"></div>
-                <div class="absolute inset-6 rounded-full border border-gray-800 opacity-50"></div>
-                <div class="absolute inset-10 rounded-full border border-gray-800 opacity-50"></div>
-                <div class="absolute inset-14 rounded-full border border-gray-800 opacity-50"></div>
-                <div class="w-28 h-28 rounded-full bg-rose-200 overflow-hidden border-4 border-zinc-800 relative z-10">
-                    <!-- 🟢 แก้ไขปกเพลง (Vinyl Cover) ตรงนี้ -->
-                    <img src="https://images.unsplash.com/photo-1516280440614-6697288d5d38?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" class="w-full h-full object-cover">
-                </div>
-            </div>
-            <div class="bg-white/60 p-4 rounded-xl text-center mb-6 w-full shadow-sm">
-                <div class="flex items-center justify-center gap-2 mb-2"><span class="w-1 h-4 bg-rose-400 rounded-full animate-[bounce_1s_infinite]"></span><span class="w-1 h-6 bg-rose-500 rounded-full animate-[bounce_1.2s_infinite]"></span><span class="w-1 h-3 bg-rose-400 rounded-full animate-[bounce_0.8s_infinite]"></span></div>
-                <p class="text-xs text-gray-600 leading-relaxed italic">"เพลงนี้อาจไม่ได้พิเศษสำหรับใคร <br>แต่สำหรับเรามันคือความรู้สึกที่มีให้เธอ"</p>
-            </div>
-            <!-- 🟢 แก้ไขลิงก์ YouTube ตรงนี้ (href) -->
-            <a href="https://www.youtube.com/watch?v=k-VdXXu8VqQ" target="_blank" onclick="playMusicState()" class="btn-primary w-full py-3 rounded-full font-bold shadow-lg mb-2 flex items-center justify-center gap-2 hover:scale-105 transition-transform"><i data-lucide="play-circle" class="w-5 h-5"></i> เปิดเพลงนี้บน YouTube</a>
-            <button onclick="navigateTo('page-menu')" class="bg-white text-rose-500 w-full py-2 rounded-full text-sm font-bold shadow-sm hover:bg-rose-50">กลับไปหน้าเมนู</button>
-        </div>
-    </div>
-
-
-    <!-- ================= JAVASCRIPT ================= -->
-    <script>
-        lucide.createIcons();
-
-        // --- BACKGROUND HEARTS ---
-        function createFloatingHearts() {
-            const container = document.getElementById('bg-hearts');
-            const heartCount = 15; 
-            for(let i=0; i<heartCount; i++) {
-                const heart = document.createElement('div'); heart.classList.add('bg-heart');
-                const left = Math.random() * 100; const duration = Math.random() * 10 + 10; const delay = Math.random() * 10; const scale = Math.random() * 0.5 + 0.5;
-                heart.style.left = `${left}%`; heart.style.animationDuration = `${duration}s`; heart.style.animationDelay = `${delay}s`; heart.style.transform = `scale(${scale})`;
-                container.appendChild(heart);
-            }
-        }
-        createFloatingHearts();
-
-        // --- NAVIGATION ---
-        function navigateTo(pageId) {
-            const currentActive = document.querySelector('.page.active');
-            if(currentActive && currentActive.id === pageId) return;
-            if(currentActive) {
-                currentActive.style.opacity = 0; currentActive.classList.remove('active');
-                setTimeout(() => { currentActive.style.display = 'none'; showNewPage(pageId); }, 400); 
-            } else { showNewPage(pageId); }
-        }
-        function showNewPage(pageId) {
-            const target = document.getElementById(pageId);
-            target.style.display = 'flex'; void target.offsetWidth; target.style.opacity = 1; target.classList.add('active');
-            if(pageId === 'page-secret') initScratchCard();
-            if(pageId === 'page-timer') startTimer();
-        }
-
-        // --- PASSCODE ---
-        let currentPasscode = "";
-        const correctPasscode = "180868"; // 🟢 แก้ไขรหัสผ่านที่นี่
-        function enterDigit(digit) {
-            if (currentPasscode.length < 6) {
-                currentPasscode += digit; updatePasscodeUI();
-                if(navigator.vibrate) navigator.vibrate(50);
-            }
-        }
-        function deleteDigit() { currentPasscode = currentPasscode.slice(0, -1); updatePasscodeUI(); document.getElementById('passcode-error').style.opacity = 0; }
-        function updatePasscodeUI() {
-            for (let i = 0; i < 6; i++) {
-                const el = document.getElementById(`digit-${i}`);
-                if (i < currentPasscode.length) { el.textContent = currentPasscode[i]; el.classList.add('bg-rose-100', 'border-rose-400', 'text-rose-700', 'scale-110'); el.classList.remove('bg-white/80', 'border-rose-200'); } 
-                else { el.textContent = ""; el.classList.remove('bg-rose-100', 'border-rose-400', 'text-rose-700', 'scale-110'); el.classList.add('bg-white/80', 'border-rose-200'); }
-            }
-        }
-        function checkPasscode() {
-            if (currentPasscode === correctPasscode) {
-                confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#fb7185', '#be123c', '#ffffff'] });
-                navigateTo('page-secret');
-            } else {
-                const dots = document.getElementById('dots-container'); dots.classList.add('shake');
-                const err = document.getElementById('passcode-error'); err.style.opacity = 1;
-                if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
-                setTimeout(() => dots.classList.remove('shake'), 400);
-                currentPasscode = ""; updatePasscodeUI();
-            }
-        }
-
-        // --- SCRATCH CARD ---
-        function initScratchCard() {
-            const canvas = document.getElementById('scratch-canvas'); if(!canvas) return;
-            const ctx = canvas.getContext('2d'); const parent = canvas.parentElement;
-            canvas.width = parent.offsetWidth; canvas.height = parent.offsetHeight;
-            ctx.fillStyle = '#fdf2f8'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#fbcfe8';
-            for(let i=0; i<30; i++) {
-                const x = Math.random() * canvas.width; const y = Math.random() * canvas.height; const size = Math.random() * 10 + 5;
-                ctx.beginPath(); ctx.arc(x, y, size, 0, Math.PI*2); ctx.fill();
-            }
-            ctx.fillStyle = '#9f1239'; ctx.font = 'bold 24px Mali'; ctx.textAlign = 'center'; ctx.fillText("ขูดเลย! ❤️", canvas.width/2, canvas.height/2);
-            let isDrawing = false;
-            function getPos(e) {
-                const rect = canvas.getBoundingClientRect();
-                let cx = e.clientX; let cy = e.clientY;
-                if(e.touches && e.touches.length > 0) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; }
-                return { x: cx - rect.left, y: cy - rect.top };
-            }
-            function scratch(e) {
-                if (!isDrawing) return;
-                const pos = getPos(e); ctx.globalCompositeOperation = 'destination-out'; ctx.beginPath(); ctx.arc(pos.x, pos.y, 25, 0, Math.PI * 2); ctx.fill();
-            }
-            canvas.addEventListener('mousedown', (e) => { isDrawing = true; scratch(e); }); canvas.addEventListener('mousemove', scratch);
-            canvas.addEventListener('mouseup', () => isDrawing = false); canvas.addEventListener('mouseleave', () => isDrawing = false);
-            canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); }, {passive: false}); canvas.addEventListener('touchmove', (e) => { scratch(e); e.preventDefault(); }, {passive: false});
-            canvas.addEventListener('touchend', () => isDrawing = false);
-        }
-
-        // --- MEMORIES (แก้ไขความทรงจำที่นี่) ---
-        // 🟢🟢🟢 แก้ไขรูปและข้อความหน้าความทรงจำที่นี่ 🟢🟢🟢
-        const memories = [
-            { 
-                img: '1.jpg', 
-                title: 'วันแรกที่รู้จักกัน', 
-                desc: 'เราเดินเอาลูกอมไปให้เธอเลยได้คุยกันนิดหน่อย แล้วหลังจากนั้นไม่นานเราก็ทักไปจีบเธอ' 
-            },
-            { 
-                img: '2.jpg', 
-                title: 'นับตั้งแต่เราคบกันมา', 
-                desc: ' ทุกอย่างยังชัดเจนเสมอเหมือนวันแรกที่เราคบกัน💗' 
-            },
-            { 
-              // ___ img: 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80', 
-                title: 'ทริปแรก', 
-                desc: '' ___ // 
-            },
-            { 
-                img: '3.jpg', 
-                title: 'วันนี้และตลอดไป', 
-                desc: 'ไม่ว่าผ่านไปนานแค่ไหน ก็ยังอยากมีเธออยู่แบบนี้ทุกวัน' 
-            }
-        ];
-        // 🟢🟢🟢 จบการแก้ไขความทรงจำ 🟢🟢🟢
-
-        let currentMemIndex = 0;
-        function loadMemory(index) {
-            const imgEl = document.getElementById('memory-img'); const titleEl = document.getElementById('memory-title'); const descEl = document.getElementById('memory-desc');
-            const dotsContainer = document.getElementById('memory-dots');
+            const removeFromCart = (id) => setCart(prev => prev.filter(item => item.id !== id));
             
-            // Render Dots
-            dotsContainer.innerHTML = '';
-            memories.forEach((_, i) => {
-                const dot = document.createElement('div');
-                dot.className = `w-2 h-2 rounded-full transition-all dot-indicator ${i === index ? 'bg-rose-500 scale-125' : 'bg-rose-200'}`;
-                dotsContainer.appendChild(dot);
-            });
+            const updateQty = (id, delta) => {
+                setCart(prev => prev.map(item => {
+                    if (item.id === id) {
+                        const newQty = item.qty + delta;
+                        return newQty > 0 ? { ...item, qty: newQty } : item;
+                    }
+                    return item;
+                }));
+            };
 
-            imgEl.style.opacity = 0; imgEl.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                imgEl.src = memories[index].img; titleEl.textContent = memories[index].title; descEl.textContent = memories[index].desc;
-                imgEl.style.opacity = 1; imgEl.style.transform = 'scale(1)';
-            }, 300);
-        }
-        function nextMemory() { currentMemIndex = (currentMemIndex + 1) % memories.length; loadMemory(currentMemIndex); }
-        function prevMemory() { currentMemIndex = (currentMemIndex - 1 + memories.length) % memories.length; loadMemory(currentMemIndex); }
-        loadMemory(0);
+            const renderPage = () => {
+                switch(currentPage) {
+                    case 'collections': return <CollectionsPage key="collections" addToCart={addToCart} setQuickViewProduct={setQuickViewProduct} />;
+                    case 'atelier': return <AtelierPage key="atelier" />;
+                    case 'journal': return <JournalPage key="journal" />;
+                    case 'contact': return <ContactPage key="contact" />;
+                    default: return <HomePage key="home" onNavigate={setCurrentPage} />;
+                }
+            };
 
-        // --- LETTER ---
-        function toggleLetter(el) { el.classList.toggle('open'); if(el.classList.contains('open')) { confetti({ particleCount: 40, spread: 50, origin: { y: 0.5 }, scalar: 0.8, colors: ['#ffe4e6', '#fda4af'] }); } }
+            return (
+                <div className="bg-luxe-black min-h-screen text-luxe-white font-sans selection:bg-luxe-gold selection:text-black flex flex-col">
+                    <Navbar 
+                        cartCount={cart.reduce((a, b) => a + b.qty, 0)} 
+                        onOpenCart={() => setIsCartOpen(true)} 
+                        activePage={currentPage}
+                        onNavigate={setCurrentPage}
+                    />
+                    
+                    <main className="flex-grow">
+                        <AnimatePresence mode="wait">
+                            {renderPage()}
+                        </AnimatePresence>
+                    </main>
 
-        // --- QUIZ ---
-        const questions = [
-            { q: "เราเจอกันครั้งแรกที่ไหน?", a: "ร้านกาแฟ", options: ["มหาวิทยาลัย", "ร้านกาแฟ", "ออนไลน์", "งานเลี้ยง"] },
-            { q: "อาหารที่เธอชอบกินที่สุดคือ?", a: "ชาบู", options: ["ซูชิ", "ส้มตำ", "ชาบู", "พิซซ่า"] },
-            { q: "สีที่เธอชอบคือ?", a: "ชมพู", options: ["ฟ้า", "ชมพู", "ขาว", "ดำ"] },
-            { q: "วันครบรอบของเราคือ?", a: "18 ส.ค.", options: ["14 ก.พ.", "18 ส.ค.", "1 ม.ค.", "25 ธ.ค."] },
-            { q: "รักเราแค่ไหน?", a: "ที่สุดในโลก", options: ["เฉยๆ", "นิดนึง", "ที่สุดในโลก", "ไม่บอก"] }
-        ];
-        let quizIndex = 0; let score = 0;
-        function resetQuiz() { quizIndex = 0; score = 0; document.getElementById('quiz-result').classList.remove('flex'); document.getElementById('quiz-result').classList.add('hidden'); loadQuestion(); }
-        function loadQuestion() {
-            if(quizIndex >= questions.length) { showQuizResult(); return; }
-            const qData = questions[quizIndex];
-            document.getElementById('quiz-current').innerText = quizIndex + 1;
-            const qEl = document.getElementById('quiz-question'); qEl.style.opacity = 0;
-            setTimeout(() => { qEl.innerText = qData.q; qEl.style.opacity = 1; }, 200);
-            const optionsDiv = document.getElementById('quiz-options'); optionsDiv.innerHTML = '';
-            qData.options.forEach((opt, i) => {
-                const btn = document.createElement('button');
-                btn.className = "w-full py-3 bg-white/80 rounded-xl shadow-sm border border-rose-100 text-rose-800 hover:bg-rose-50 transition-all transform active:scale-95";
-                btn.style.animationDelay = `${i * 0.1}s`; btn.innerText = opt; btn.onclick = () => checkAnswer(opt, qData.a);
-                optionsDiv.appendChild(btn);
-            });
-        }
-        function checkAnswer(selected, correct) { if(selected === correct) score++; quizIndex++; loadQuestion(); }
-        function showQuizResult() {
-            document.getElementById('quiz-score-display').innerText = score;
-            const msg = document.getElementById('quiz-msg');
-            if(score === 5) msg.innerText = "สุดยอด! แฟนพันธุ์แท้ ❤️"; else if(score >= 3) msg.innerText = "เก่งมาก รักนะจุ๊บๆ"; else msg.innerText = "ไม่เป็นไรนะ รักเหมือนเดิม";
-            const res = document.getElementById('quiz-result'); res.classList.remove('hidden'); res.classList.add('flex');
-            confetti({ particleCount: 150, spread: 70 });
-        }
+                    {/* Marquee Ticker */}
+                    <div className="py-8 bg-luxe-gold border-y border-black overflow-hidden whitespace-nowrap">
+                         <motion.div animate={{ x: [0, -1000] }} transition={{ repeat: Infinity, duration: 20, ease: "linear" }} className="inline-block text-black font-serif text-2xl italic font-bold tracking-widest">
+                            FREE SHIPPING WORLDWIDE — PREMIER QUALITY GUARANTEED — HANDCRAFTED MASTERPIECES — LUXURY REDEFINED — 
+                            FREE SHIPPING WORLDWIDE — PREMIER QUALITY GUARANTEED — HANDCRAFTED MASTERPIECES — LUXURY REDEFINED —
+                         </motion.div>
+                    </div>
 
-        // --- TIMER ---
-        const startDate = new Date('2024-08-18T00:00:00'); // 🟢 แก้ไขวันที่เริ่มคบ (YYYY-MM-DD)
-        let timerInterval;
-        function startTimer() { if(timerInterval) clearInterval(timerInterval); updateTimerDisplay(); timerInterval = setInterval(updateTimerDisplay, 1000); }
-        function updateTimerDisplay() {
-            const now = new Date(); const diff = now - startDate; if (diff < 0) return;
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-            document.getElementById('timer-days').innerText = days; document.getElementById('timer-hours').innerText = String(hours).padStart(2, '0');
-            document.getElementById('timer-minutes').innerText = String(minutes).padStart(2, '0'); document.getElementById('timer-seconds').innerText = String(seconds).padStart(2, '0');
-        }
+                    {/* Footer */}
+                    <footer className="bg-luxe-dark text-white pt-20 pb-10 border-t border-white/5">
+                        <div className="container mx-auto px-6 grid md:grid-cols-4 gap-12 mb-16">
+                            <div>
+                                <a href="#" className="font-serif text-2xl font-bold tracking-widest text-white mb-6 block">LUXE<span className="text-luxe-gold">.</span>WEAR</a>
+                                <p className="text-gray-500 text-sm leading-relaxed">สัญลักษณ์แห่งความสง่างามและความสมบูรณ์แบบ แฟชั่นที่ไร้กาลเวลาสำหรับสุภาพบุรุษผู้มีรสนิยม</p>
+                            </div>
+                            <div>
+                                <h4 className="font-serif text-lg mb-6 text-luxe-gold">Menu</h4>
+                                <ul className="space-y-4 text-sm text-gray-400">
+                                    <li className="cursor-pointer hover:text-white" onClick={() => setCurrentPage('home')}>Home</li>
+                                    <li className="cursor-pointer hover:text-white" onClick={() => setCurrentPage('collections')}>Collections</li>
+                                    <li className="cursor-pointer hover:text-white" onClick={() => setCurrentPage('atelier')}>Atelier</li>
+                                    <li className="cursor-pointer hover:text-white" onClick={() => setCurrentPage('journal')}>Journal</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 className="font-serif text-lg mb-6 text-luxe-gold">Customer Care</h4>
+                                <ul className="space-y-4 text-sm text-gray-400">
+                                    <li><a href="#" className="hover:text-white">Shipping & Returns</a></li>
+                                    <li><a href="#" className="hover:text-white">Size Guide</a></li>
+                                    <li><a href="#" className="hover:text-white">FAQ</a></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 className="font-serif text-lg mb-6 text-luxe-gold">Newsletter</h4>
+                                <div className="flex border-b border-white/20 pb-2">
+                                    <input type="email" placeholder="YOUR EMAIL" className="bg-transparent w-full outline-none text-white text-sm placeholder-gray-600" />
+                                    <button className="text-white hover:text-luxe-gold uppercase text-xs tracking-widest">Subscribe</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="container mx-auto px-6 text-center border-t border-white/5 pt-8 text-gray-600 text-xs tracking-widest">&copy; 2024 LUXE WEAR. ALL RIGHTS RESERVED.</div>
+                    </footer>
 
-        // --- POLAROID ---
-        function takePhoto() {
-            const btn = document.getElementById('btn-snap'); const flash = document.getElementById('shutter-flash'); const result = document.getElementById('polaroid-result'); const dateText = document.getElementById('polaroid-date');
-            if(navigator.vibrate) navigator.vibrate(50);
-            flash.style.opacity = 1;
-            setTimeout(() => {
-                flash.style.opacity = 0; result.classList.remove('hidden'); dateText.classList.remove('hidden');
-                btn.innerHTML = '<i data-lucide="check" class="text-white w-8 h-8"></i>'; btn.classList.add('bg-green-500', 'border-green-300'); btn.classList.remove('btn-primary');
-                confetti({ particleCount: 50, spread: 40, origin: { y: 0.7 } });
-            }, 150);
-        }
-        function resetPolaroid() {
-            document.getElementById('polaroid-result').classList.add('hidden'); document.getElementById('polaroid-date').classList.add('hidden');
-            const btn = document.getElementById('btn-snap'); btn.innerHTML = '<i data-lucide="aperture" class="w-8 h-8"></i>'; btn.classList.remove('bg-green-500', 'border-green-300'); btn.classList.add('btn-primary');
-        }
+                    {/* Sidebar Cart */}
+                    <AnimatePresence>
+                        {isCartOpen && (
+                            <>
+                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsCartOpen(false)} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60]" />
+                                <motion.div initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} transition={{ type: 'spring', damping: 25, stiffness: 200 }} className="fixed top-0 right-0 h-full w-full md:w-[450px] bg-luxe-dark border-l border-white/10 z-[70] shadow-2xl flex flex-col">
+                                    <div className="p-6 border-b border-white/10 flex justify-between items-center bg-luxe-black">
+                                        <h2 className="font-serif text-2xl text-white italic">Your Selection</h2>
+                                        <button onClick={() => setIsCartOpen(false)} className="text-gray-400 hover:text-white"><Icons.X /></button>
+                                    </div>
+                                    <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                                        {cart.length === 0 ? (
+                                            <div className="h-full flex flex-col items-center justify-center text-gray-500"><Icons.ShoppingBag className="w-12 h-12 mb-4 opacity-20" /><p className="text-sm uppercase tracking-widest">Your cart is empty</p></div>
+                                        ) : (
+                                            cart.map(item => (
+                                                <div key={item.id} className="flex gap-4">
+                                                    <div className="w-20 h-24 bg-gray-800 overflow-hidden shrink-0"><img src={item.image} alt={item.name} className="w-full h-full object-cover" /></div>
+                                                    <div className="flex-1">
+                                                        <div className="flex justify-between items-start"><h3 className="font-serif text-white text-lg">{item.name}</h3><button onClick={() => removeFromCart(item.id)} className="text-gray-500 hover:text-red-400"><Icons.X className="w-4 h-4" /></button></div>
+                                                        <p className="text-xs text-gray-400 uppercase tracking-wider mb-3">{item.category}</p>
+                                                        <div className="flex justify-between items-center">
+                                                            <div className="flex items-center border border-white/20">
+                                                                <button onClick={() => updateQty(item.id, -1)} className="p-1 hover:bg-white/10 text-white"><Icons.Minus className="w-3 h-3"/></button>
+                                                                <span className="px-3 text-sm text-white">{item.qty}</span>
+                                                                <button onClick={() => updateQty(item.id, 1)} className="p-1 hover:bg-white/10 text-white"><Icons.Plus className="w-3 h-3"/></button>
+                                                            </div>
+                                                            <p className="text-luxe-gold">฿{(item.price * item.qty).toLocaleString()}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+                                    <div className="p-6 border-t border-white/10 bg-luxe-black">
+                                        <div className="flex justify-between items-center mb-6"><span className="text-gray-400 uppercase text-sm tracking-widest">Total</span><span className="font-serif text-2xl text-luxe-gold">฿{cart.reduce((acc, item) => acc + (item.price * item.qty), 0).toLocaleString()}</span></div>
+                                        <button className="w-full bg-white text-black py-4 uppercase text-xs font-bold tracking-[0.2em] hover:bg-luxe-gold transition-colors">Checkout Now</button>
+                                    </div>
+                                </motion.div>
+                            </>
+                        )}
+                    </AnimatePresence>
 
-        // --- MUSIC ---
-        function playMusicState() { document.getElementById('vinyl').classList.remove('paused'); }
+                    {/* Quick View Modal */}
+                    <AnimatePresence>
+                        {quickViewProduct && (
+                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/80 backdrop-blur-md z-[80] flex items-center justify-center p-4" onClick={() => setQuickViewProduct(null)}>
+                                <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 50, opacity: 0 }} onClick={(e) => e.stopPropagation()} className="bg-luxe-dark w-full max-w-4xl grid md:grid-cols-2 overflow-hidden shadow-2xl border border-white/10">
+                                    <div className="relative h-64 md:h-full"><img src={quickViewProduct.image} className="w-full h-full object-cover" /></div>
+                                    <div className="p-8 md:p-12 relative">
+                                        <button onClick={() => setQuickViewProduct(null)} className="absolute top-6 right-6 text-gray-400 hover:text-white"><Icons.X /></button>
+                                        <h2 className="font-serif text-3xl md:text-4xl text-white mb-2">{quickViewProduct.name}</h2>
+                                        <p className="text-2xl text-luxe-gold mb-6 font-light">฿{quickViewProduct.price.toLocaleString()}</p>
+                                        <p className="text-gray-300 font-light leading-relaxed mb-8">{quickViewProduct.desc}</p>
+                                        <button onClick={() => { addToCart(quickViewProduct); setQuickViewProduct(null); }} className="w-full bg-white text-black py-4 uppercase text-xs font-bold tracking-[0.2em] hover:bg-luxe-gold transition-colors flex items-center justify-center gap-2"><Icons.ShoppingBag className="w-4 h-4" /> Add to Cart</button>
+                                    </div>
+                                </motion.div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+            );
+        };
 
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
 </body>
 </html>
